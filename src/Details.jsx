@@ -1,13 +1,17 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Carousel from "./Carousel";
 import fetchPet from "./fetchPet";
 import ErrorBoundary from "./ErrorBoundary";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Modal from "./Modal";
+import AdoptedPetContext from "./AdoptedPetContext";
 
 const Details = () => {
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
+  const [_, setAdoptedPet] = useContext(AdoptedPetContext);
   const { id } = useParams();
 
   const results = useQuery(["details", id], fetchPet);
@@ -36,7 +40,14 @@ const Details = () => {
               <h1>Would you like to adopt {pet.name}</h1>
             </div>
             <div className="buttons">
-              <button>Yes</button>
+              <button
+                onClick={() => {
+                  setAdoptedPet(pet);
+                  navigate("/");
+                }}
+              >
+                Yes
+              </button>
               <button onClick={() => setShowModal(false)}>No</button>
             </div>
           </Modal>
